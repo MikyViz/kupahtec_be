@@ -1,4 +1,4 @@
-import { User } from "../database/index.js";
+import { User, OrganizationUser } from "../database/index.js";
 
 const getAll = async () => {
     try {
@@ -104,6 +104,7 @@ const register = async (newUser) => {
         if (user) {
             user.token = user.generateJWT();
             await user.save();
+            await OrganizationUser.create({ OrganizationId: newUser.OrganizationId, UserId: user.Id});
             return user;
         }
         return null;

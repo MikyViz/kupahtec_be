@@ -2,6 +2,7 @@
 import sequelize from "./db-mysql.js";
 import User from "./models/user-model.js";
 import Organization from "./models/organization-model.js";
+import OrganizationUser from "./models/organization-user.js";
 
 //connect to db and sync models
 const syncModels = async () => {
@@ -15,4 +16,4 @@ const syncModels = async () => {
     }
 }
 
-export { syncModels, User, Organization, sequelize };
+export { syncModels, User, Organization, OrganizationUser, sequelize };

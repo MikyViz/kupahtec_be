@@ -2,7 +2,7 @@ import { sequelize } from "../index.js";
 import { DataTypes, literal } from "sequelize";
 // import { UUIDV4 } from "uuid";
 // import { v4 as uuidv4 } from "uuid";
-import User from './user-model.js'
+// import User from './user-model.js'
 
 const Organization = sequelize.define("Organization", {
     // Model attributes are defined here
@@ -30,8 +30,9 @@ const Organization = sequelize.define("Organization", {
     // Other model options go here
 });
 
-Organization.hasMany(User);
-User.belongsTo(Organization);
+// Organization.hasMany(User);
+// User.belongsTo(Organization);
+
 // Organization.prototype.toJSON = function () {
 //     const values = Object.assign({}, this.get());
 //     delete values.password;
