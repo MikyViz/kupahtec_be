@@ -1,6 +1,7 @@
 // import sequelize from "./db-postgres.js";
 import sequelize from "./db-mysql.js";
 import User from "./models/user-model.js";
+import Organization from "./models/organization-model.js";
 
 //connect to db and sync models
 const syncModels = async () => {
@@ -14,4 +15,4 @@ const syncModels = async () => {
     }
 }
 
-export { syncModels, User, sequelize };
+export { syncModels, User, Organization, sequelize };

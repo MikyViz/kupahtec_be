@@ -1,4 +1,4 @@
-// import { User } from "../database/index.js";
+import { User } from "../database/index.js";
 
 const getAll = async () => {
     try {
@@ -130,6 +130,7 @@ export default {
     create,
     update,
     deleteById,
+    deleteAll,
     login,
     register,
     me

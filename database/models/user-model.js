@@ -58,15 +58,15 @@ const User = sequelize.define("User", {
         // allowNull defaults to true
     },
     flore: {
-        type: DataTypes.NUMBER
+        type: DataTypes.STRING
         // allowNull defaults to true
     },
     cellPhone: {
-        type: DataTypes.NUMBER
+        type: DataTypes.STRING
         // allowNull defaults to true
     },
     homePhone: {
-        type: DataTypes.NUMBER
+        type: DataTypes.STRING
         // allowNull defaults to true
     },
     password: {
@@ -80,10 +80,10 @@ const User = sequelize.define("User", {
         type: DataTypes.STRING
         // allowNull defaults to true
     },
-    ogrId: {
-        type: DataTypes.STRING
-        // allowNull defaults to true
-    },
+    // ogrId: {
+    //     type: DataTypes.UUID
+    //     // allowNull defaults to true
+    // },
     isGabbay: {
         type: DataTypes.BOOLEAN
         // allowNull defaults to true

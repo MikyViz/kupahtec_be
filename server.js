@@ -2,10 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 // import path from 'path';
-import {syncModels}  from "./dataBase/index.js";
+import {syncModels}  from "./database/index.js";
 import UserRouter from "./routes/user-routes.js";
-// import ReviewRouter from "./routers/reviewRouter.js";
-import {fileURLToPath} from 'url';
+import OrganizationRouter from "./routes/organization-routes.js";
+
+// import {fileURLToPath} from 'url';
 
 dotenv.config();
 const port = parseInt(process.env.PORT) || 8081;
@@ -31,7 +32,8 @@ app.get('/', (req, res) => {
   res.json({bro:'ALOHA!!!'});
 });
 
-app.use('/users', UserRouter);
+app.use('/users', new UserRouter().getRouter());
+app.use('/organizations', new OrganizationRouter().getRouter());
 // app.use('/review', ReviewRouter);
 
 // app.use('/imgs', express.static(path.join(__dirname, 'imgs')));
