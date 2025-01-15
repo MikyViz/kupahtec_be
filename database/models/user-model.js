@@ -89,19 +89,21 @@ const User = sequelize.define("User", {
         // allowNull defaults to true
     },
     isManager: {
-        type: DataTypes.BOOLEAN
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
         // allowNull defaults to true
     },
     isOwner: {
-        type: DataTypes.BOOLEAN
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
         // allowNull defaults to true
     },
     instructions: {
         type: DataTypes.STRING
         // allowNull defaults to true
     },
-    paingProg: {
-        type: DataTypes.STRING
+    num: {
+        type: DataTypes.INTEGER
         // allowNull defaults to true
     },
     status: {

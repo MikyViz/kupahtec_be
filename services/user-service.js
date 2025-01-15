@@ -1,3 +1,4 @@
+import { where } from "sequelize";
 import { User, OrganizationUser } from "../database/index.js";
 
 const getAll = async () => {
@@ -23,12 +24,31 @@ const getById = async (id) => {
         throw new Error(error);
     }
 }
-
-const create = async (newUser) => {
+const getOrgById = async (Id) => {
     try {
-        const user = await User.create(newUser);
+        const org = await OrganizationUser.findOne({where: {UserId: Id},});
+        console.log(org);
+        
+        if (org) {
+            return org;
+        }
+        return null;
+    } catch (error) {
+        console.log(error);
+        throw new Error(error);
+    }
+}
+
+const create = async (req) => {
+    try {
+        const orgId = await getOrgById(req.user.Id);
+        const user = await User.create(req.body);
         if (user) {
-            return user;
+            const orgUserNode = await OrganizationUser.create({ OrganizationId: orgId.OrganizationId, UserId: user.Id});
+            console.log(orgUserNode);
+            if (orgUserNode) {
+                return user;
+            }
         }
         return null;
     } catch (error) {
