@@ -32,6 +32,8 @@ const create = async (newUser) => {
         }
         return null;
     } catch (error) {
+        console.log('🤧' + error);
+        
         throw new Error(error);
     }
 }

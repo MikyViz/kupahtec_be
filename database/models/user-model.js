@@ -132,7 +132,7 @@ User.prototype.generateJWT = function () {
     expirationDate.setDate(today.getDate() + 60);
     return jwt.sign({
         email: this.email,
-        id: this.id,
+        id: this.Id,
         exp: parseInt(expirationDate.getTime() / 1000, 10),
     }, process.env.JWT_SECRET);
 }
