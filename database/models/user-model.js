@@ -1,6 +1,7 @@
 import { sequelize } from "../index.js";
 import { DataTypes, literal } from "sequelize";
 import jwt from "jsonwebtoken";
+import bcrypt from 'bcrypt';
 // import { UUIDV4 } from "uuid";
 import { v4 as uuidv4 } from "uuid";
 const User = sequelize.define("User", {
@@ -53,7 +54,7 @@ const User = sequelize.define("User", {
         type: DataTypes.STRING
         // allowNull defaults to true
     },
-    apt: { 
+    apt: {
         type: DataTypes.STRING
         // allowNull defaults to true
     },
@@ -71,7 +72,7 @@ const User = sequelize.define("User", {
     },
     password: {
         type: DataTypes.STRING,
-        validate:{
+        validate: {
             min: 6
         }
         // allowNull defaults to true
@@ -106,10 +107,11 @@ const User = sequelize.define("User", {
         type: DataTypes.INTEGER
         // allowNull defaults to true
     },
-    status: {
-        type: DataTypes.ENUM("active", "inactive")
-        // allowNull defaults to true
-    },
+    // status: {
+    //     type: DataTypes.ENUM("active", "inactive")
+    //     // allowNull defaults to true
+    // },
+    isActive: { type: DataTypes.BOOLEAN },
     createdAt: {
         type: DataTypes.DATE
         // allowNull defaults to true
@@ -119,6 +121,14 @@ const User = sequelize.define("User", {
         // allowNull defaults to true
     }
 }, {
+    hooks: {
+        beforeCreate: async (user) => {
+            if (user.password) {
+                const saltRounds = 10;
+                user.password = await bcrypt.hash(user.password, saltRounds);  
+            }
+        },
+    }
     // Other model options go here
 });
 

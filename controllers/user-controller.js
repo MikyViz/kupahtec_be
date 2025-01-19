@@ -15,7 +15,10 @@ export default class UserController {
 
     static async getById(req, res) {
         try {
+            console.log('🧐'+req);
             const user = await userService.getById(req.params.id);
+            console.log('🔞'+user);
+            
             if (!user) {
                 return res.status(404).json({msg: "User not found"});
             }
@@ -87,7 +90,6 @@ export default class UserController {
 
     static async me(req, res) {
         try {
-            console.log(req.user);
             const user = await userService.me(req.user);
             if (!user) {
                 return res.status(404).json({msg: "User not found"});

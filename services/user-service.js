@@ -1,5 +1,6 @@
 import { where } from "sequelize";
 import { User, OrganizationUser } from "../database/index.js";
+import bcrypt from "bcrypt";
 
 const getAll = async () => {
     try {
@@ -106,13 +107,16 @@ const login = async ({email, password}) => {
         const user = await User.findOne({
             where: {
                 email,
-                password
             }
         }); // SELECT * FROM users WHERE email = email AND password = password;
         if (user) {
-            user.token = user.generateJWT();
-            await user.save();    
-            return user;
+            const match = await bcrypt.compare(password, user.password);
+            if (match) {
+                user.token = user.generateJWT();
+                await user.save();
+                console.log("login is OK👌");
+                return user;
+            }
         }
         return null;
     } catch (error) {
@@ -135,7 +139,7 @@ const register = async (newUser) => {
     }
 }
 
-const me = async (user) => {
+const me = async (user) => {    
     try {
         if (user) {
             return user;
