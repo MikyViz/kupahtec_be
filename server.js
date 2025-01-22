@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import {syncModels}  from "./database/index.js";
 import UserRouter from "./routes/user-routes.js";
 import OrganizationRouter from "./routes/organization-routes.js";
+import OrganizationUserRouter from './routes/organizationUser-routes.js';
 
 // import {fileURLToPath} from 'url';
 
@@ -34,6 +35,7 @@ app.get('/', (req, res) => {
 
 app.use('/users', new UserRouter().getRouter());
 app.use('/organizations', new OrganizationRouter().getRouter());
+app.use('/orgsUsers', new OrganizationUserRouter().getRouter());
 // app.use('/review', ReviewRouter);
 
 // app.use('/imgs', express.static(path.join(__dirname, 'imgs')));

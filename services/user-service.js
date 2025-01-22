@@ -11,7 +11,7 @@ const getAll = async () => {
         return null;
     } catch (error) {
         throw new Error(error);
-    }        
+    }
 }
 
 const getById = async (id) => {
@@ -27,9 +27,9 @@ const getById = async (id) => {
 }
 const getOrgById = async (Id) => {
     try {
-        const org = await OrganizationUser.findOne({where: {UserId: Id},});
-        console.log(org);
-        
+        const org = await OrganizationUser.findOne({ where: { UserId: Id }, });
+        // console.log(org);
+
         if (org) {
             return org;
         }
@@ -42,10 +42,10 @@ const getOrgById = async (Id) => {
 
 const create = async (req) => {
     try {
-        const orgId = await getOrgById(req.user.Id);
+        const orgId = await getOrgById(req.user.Id); // TODO the names ov vars don't fit to  their essence 
         const user = await User.create(req.body);
         if (user) {
-            const orgUserNode = await OrganizationUser.create({ OrganizationId: orgId.OrganizationId, UserId: user.Id});
+            const orgUserNode = await OrganizationUser.create({ OrganizationId: orgId.OrganizationId, UserId: user.Id });
             console.log(orgUserNode);
             if (orgUserNode) {
                 return user;
@@ -54,7 +54,7 @@ const create = async (req) => {
         return null;
     } catch (error) {
         console.log('🤧' + error);
-        
+
         throw new Error(error);
     }
 }
@@ -99,10 +99,10 @@ const deleteAll = async () => {
         return null;
     } catch (error) {
         throw new Error(error);
-    }destroy
+    } destroy
 }
 
-const login = async ({email, password}) => {
+const login = async ({ email, password }) => {
     try {
         const user = await User.findOne({
             where: {
@@ -130,7 +130,7 @@ const register = async (newUser) => {
         if (user) {
             user.token = user.generateJWT();
             await user.save();
-            await OrganizationUser.create({ OrganizationId: newUser.OrganizationId, UserId: user.Id});
+            await OrganizationUser.create({ OrganizationId: newUser.OrganizationId, UserId: user.Id });
             return user;
         }
         return null;
@@ -139,10 +139,21 @@ const register = async (newUser) => {
     }
 }
 
-const me = async (user) => {    
+const me = async (req) => {
     try {
-        if (user) {
-            return user;
+        const orgId = await getOrgById(req.user.Id);
+        // console.log('🫎' + orgId.OrganizationId + '🫎');
+
+        if (req.user && orgId) {
+            console.log("user before ✌️ " + req.user);
+            console.log("id before " + orgId.OrganizationId);
+            
+            // req.user = { ...req.user, orgId: orgId.OrganizationId };
+            req.user.setDataValue('orgId', orgId.OrganizationId);
+
+            console.log("user after 😺 " + req.user);
+            console.log("id after " + orgId.OrganizationId);
+            return req.user;
         }
         return null;
     } catch (error) {

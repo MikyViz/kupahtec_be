@@ -90,7 +90,7 @@ export default class UserController {
 
     static async me(req, res) {
         try {
-            const user = await userService.me(req.user);
+            const user = await userService.me(req);
             if (!user) {
                 return res.status(404).json({msg: "User not found"});
             }
