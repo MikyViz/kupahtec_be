@@ -46,7 +46,6 @@ const create = async (req) => {
         const user = await User.create(req.body);
         if (user) {
             const orgUserNode = await OrganizationUser.create({ OrganizationId: orgId.OrganizationId, UserId: user.Id });
-            console.log(orgUserNode);
             if (orgUserNode) {
                 return user;
             }
@@ -76,14 +75,18 @@ const update = async (id, userUpdated) => {
 const deleteById = async (id) => {
     try {
         const user = await getById(id);
+        const orgUser = await getOrgById(id);
 
         if (!user) {
             return null;
         }
+        await orgUser.destroy();
         await user.destroy();
         return user;
     } catch (error) {
+        console.log(error);
         throw new Error(error);
+        
     }
 }
 
