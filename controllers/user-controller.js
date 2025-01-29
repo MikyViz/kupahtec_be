@@ -97,4 +97,17 @@ export default class UserController {
             res.status(500).json({msg: error.message});
         }
     }
-}
+    static async assignGabbay (req, res) {
+        try {
+            const assign = await userService.assignGabbay(req);
+    
+            if (!assign) {
+                return res.status(404).json({ message: 'User or Gabbay not found' });
+            }
+    
+            res.status(200).json({ message: 'User assigned to Gabbay successfully' });
+        } catch (error) {
+            res.status(500).json({ message: 'Error assigning user to Gabbay', error });
+        }
+    };
+};

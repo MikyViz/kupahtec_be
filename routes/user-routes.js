@@ -14,6 +14,7 @@ export default class UserRouter {
         router.delete('/:id', auth, userController.delete);
         router.post('/login', userController.login);
         router.post('/register', userController.register);
+        router.post('/assign-gabbay', auth, userController.assignGabbay);
     }
 
     getRouter() {

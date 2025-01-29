@@ -1,5 +1,5 @@
 import { where } from "sequelize";
-import { User, OrganizationUser } from "../database/index.js";
+import { User, OrganizationUser, GabbayUser } from "../database/index.js";
 import bcrypt from "bcrypt";
 
 const getAll = async () => {
@@ -86,7 +86,7 @@ const deleteById = async (id) => {
     } catch (error) {
         console.log(error);
         throw new Error(error);
-        
+
     }
 }
 
@@ -148,14 +148,7 @@ const me = async (req) => {
         // console.log('🫎' + orgId.OrganizationId + '🫎');
 
         if (req.user && orgId) {
-            console.log("user before ✌️ " + req.user);
-            console.log("id before " + orgId.OrganizationId);
-            
-            // req.user = { ...req.user, orgId: orgId.OrganizationId };
             req.user.setDataValue('orgId', orgId.OrganizationId);
-
-            console.log("user after 😺 " + req.user);
-            console.log("id after " + orgId.OrganizationId);
             return req.user;
         }
         return null;
@@ -163,6 +156,24 @@ const me = async (req) => {
         throw new Error(error);
     }
 }
+
+const assignGabbay = async (req) => {
+    try {
+        const { gabbayId, userId } = req.body;
+        const gabbay = await User.findByPk(gabbayId);
+        const user = await User.findByPk(userId);
+        
+        if (gabbay && user) {
+            const assign = await GabbayUser.create({ GabbayId: gabbayId, UserId: userId });
+            if (assign) return assign
+        }
+        
+        return null
+    } catch (error) {
+        console.log('🤦Error assigning user to Gabbay', error);
+        res.status(500).json({ message: '🤦Error assigning user to Gabbay', error });
+    }
+};
 
 
 export default {
@@ -174,5 +185,6 @@ export default {
     deleteAll,
     login,
     register,
-    me
+    me,
+    assignGabbay
 }
