@@ -7,8 +7,10 @@ const router = express.Router();
 export default class UserRouter {
     constructor() {
         router.get('/', auth, userController.getAll);
+        router.get('/manager-contacts/:id', auth, userController.getAllByManager);
         router.get('/me', auth, userController.me);
         router.get('/:id', auth,  userController.getById);
+        router.get('/assign-gabbay/:id', auth,  userController.getAssignedUsers);
         router.post('/', auth, userController.create);
         router.put('/:id', auth,  userController.update);
         router.delete('/:id', auth, userController.delete);

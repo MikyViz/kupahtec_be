@@ -12,6 +12,18 @@ export default class UserController {
             return res.status(500).json({msg: error.message});
         }
     }
+    static async getAllByManager(req, res) {
+        try {
+            const orgId = req.params.id
+            const users = await userService.getAllByManager(orgId);
+            if (!users) {
+                return res.status(404).json({msg: "Users not found"});
+            }
+            return res.status(200).json(users);
+        } catch (error) {
+            return res.status(500).json({msg: error.message});
+        }
+    }
 
     static async getById(req, res) {
         try {
@@ -25,10 +37,22 @@ export default class UserController {
             res.status(500).json({msg: error.message});
         }
     }
+    static async getAssignedUsers(req, res) {
+        try {
+            const users = await userService.getAssignedUsers(req.params.id);
+            
+            if (!users) {
+                return res.status(404).json({msg: "😕Users not found"});
+            }
+            res.status(200).json(users);
+        } catch (error) {
+            res.status(500).json({msg: error.message});
+        }
+    }
 
     static async create(req, res) {
         try {
-            const user = await userService.create(req);
+            const user = await userService.create(req.params.orgId);
             if (!user) {
                 return res.status(404).json({msg: "User not found"});
             }

@@ -1,5 +1,5 @@
 import { where } from "sequelize";
-import { User, OrganizationUser, GabbayUser } from "../database/index.js";
+import { User, Organization, OrganizationUser, GabbayUser } from "../database/index.js";
 import bcrypt from "bcrypt";
 
 const getAll = async () => {
@@ -7,6 +7,26 @@ const getAll = async () => {
         const users = await User.findAll(); // SELECT * FROM users; 
         if (users.length > 0) {
             return users;
+        }
+        return null;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+const getAllByManager = async (orgId) => {
+    try {
+        const organization = await Organization.findByPk(orgId, {
+            include: [{
+              model: User,
+              as: 'Users',
+              through: {
+                attributes: [] // Исключаем промежуточные атрибуты
+              }
+            }]
+        });
+
+        if (organization.Users.length > 0) {
+            return organization.Users;
         }
         return null;
     } catch (error) {
@@ -25,6 +45,28 @@ const getById = async (id) => {
         throw new Error(error);
     }
 }
+
+const getAssignedUsers = async (gabbayId) => {
+    try {
+        const assignedUsers = await User.findAll({
+            include: [{
+              model: User,
+              as: 'Gabbaim',
+              where: { Id: gabbayId },
+              through: {
+                attributes: []
+              }
+            }]
+          });
+        if (assignedUsers) {
+            return assignedUsers;
+        }
+        return null;
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
 const getOrgById = async (Id) => {
     try {
         const org = await OrganizationUser.findOne({ where: { UserId: Id }, });
@@ -42,10 +84,12 @@ const getOrgById = async (Id) => {
 
 const create = async (req) => {
     try {
-        const orgId = await getOrgById(req.user.Id); // TODO the names ov vars don't fit to  their essence 
+        const org = await getOrgById(req.user.Id);
+        if (req.body.isGabbay || req.body.isManager)
+            req.body.password = req.body.cellPhone || "password";
         const user = await User.create(req.body);
         if (user) {
-            const orgUserNode = await OrganizationUser.create({ OrganizationId: orgId.OrganizationId, UserId: user.Id });
+            const orgUserNode = await OrganizationUser.create({ OrganizationId: org.OrganizationId, UserId: user.Id });
             if (orgUserNode) {
                 return user;
             }
@@ -64,6 +108,13 @@ const update = async (id, userUpdated) => {
         if (!user) {
             return null;
         }
+        if (userUpdated.isGabbay || userUpdated.isManager)
+            {
+                if (user.password === null) {
+                    userUpdated.password = userUpdated.cellPhone || "password";
+                }
+                
+            }
         user.set(userUpdated);
         await user.save();
         return user;
@@ -112,7 +163,7 @@ const login = async ({ email, password }) => {
                 email,
             }
         }); // SELECT * FROM users WHERE email = email AND password = password;
-        if (user) {
+        if (user && (user.isGabbay || user.isManager)) {
             const match = await bcrypt.compare(password, user.password);
             if (match) {
                 user.token = user.generateJWT();
@@ -162,12 +213,12 @@ const assignGabbay = async (req) => {
         const { gabbayId, userId } = req.body;
         const gabbay = await User.findByPk(gabbayId);
         const user = await User.findByPk(userId);
-        
+
         if (gabbay && user) {
             const assign = await GabbayUser.create({ GabbayId: gabbayId, UserId: userId });
             if (assign) return assign
         }
-        
+
         return null
     } catch (error) {
         console.log('🤦Error assigning user to Gabbay', error);
@@ -178,6 +229,7 @@ const assignGabbay = async (req) => {
 
 export default {
     getAll,
+    getAllByManager,
     getById,
     create,
     update,
@@ -186,5 +238,6 @@ export default {
     login,
     register,
     me,
-    assignGabbay
+    assignGabbay,
+    getAssignedUsers
 }

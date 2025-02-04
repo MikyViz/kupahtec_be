@@ -11,12 +11,22 @@ const OrganizationUser = sequelize.define("OrganizationUser", {
     { timestamps: false }
 );
 // Определение связей 
-// Organization.belongsToMany(User, { through: OrganizationUser });
-// User.belongsToMany(Organization, { through: OrganizationUser });
+Organization.belongsToMany(User, {
+    as: 'Users',
+    through: OrganizationUser,
+    foreignKey: 'OrganizationId',
+    otherKey: 'UserId',
+});
+User.belongsToMany(Organization, {
+    through: OrganizationUser,
+    foreignKey: 'UserId',
+    otherKey: 'OrganizationId',
+    as: 'Organizations',
+});
 
-OrganizationUser.belongsTo(Organization, { foreignKey: 'OrganizationId' });
-OrganizationUser.belongsTo(User, { foreignKey: 'UserId' });
-Organization.hasMany(OrganizationUser, { foreignKey: 'OrganizationId' });
-User.hasMany(OrganizationUser, { foreignKey: 'UserId' });
+// OrganizationUser.belongsTo(Organization, { foreignKey: 'OrganizationId' });
+// OrganizationUser.belongsTo(User, { foreignKey: 'UserId' });
+// Organization.hasMany(OrganizationUser, { foreignKey: 'OrganizationId' });
+// User.hasMany(OrganizationUser, { foreignKey: 'UserId' });
 
 export default OrganizationUser
