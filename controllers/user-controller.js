@@ -52,7 +52,7 @@ export default class UserController {
 
     static async create(req, res) {
         try {
-            const user = await userService.create(req.params.orgId);
+            const user = await userService.create(req);
             if (!user) {
                 return res.status(404).json({msg: "User not found"});
             }

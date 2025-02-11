@@ -128,6 +128,12 @@ const User = sequelize.define("User", {
                 user.password = await bcrypt.hash(user.password, saltRounds);  
             }
         },
+        beforeUpdate: async (userUpdated) => {
+            if (userUpdated.changed('password')) {
+                const saltRounds = 10;
+                userUpdated.password = await bcrypt.hash(userUpdated.password, saltRounds);  
+            }
+        }
     }
     // Other model options go here
 });
