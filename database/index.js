@@ -4,6 +4,7 @@ import User from "./models/user-model.js";
 import Organization from "./models/organization-model.js";
 import OrganizationUser from "./models/organization-user.js";
 import GabbayUser from "./models/GabbayUser.js";
+import Donation from "./models/donation-model.js";
 
 //connect to db and sync models
 const syncModels = async () => {
@@ -17,4 +18,4 @@ const syncModels = async () => {
     }
 }
 
-export { syncModels, User, Organization, OrganizationUser, GabbayUser, sequelize };
+export { syncModels, User, Organization, OrganizationUser, GabbayUser, Donation, sequelize };
